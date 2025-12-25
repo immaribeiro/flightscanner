@@ -1,0 +1,44 @@
+{
+  "aiProviders": {
+    "openai": {
+      "model": "gpt-4-turbo-preview",
+      "maxTokens": 4096,
+      "temperature": 0.7
+    },
+    "anthropic": {
+      "model": "claude-3-5-sonnet-20241022",
+      "maxTokens": 4096,
+      "temperature": 0.7
+    }
+  },
+  "scraping": {
+    "rateLimiting": {
+      "maxRequests": 5,
+      "windowMs": 1000
+    },
+    "timeout": 30000,
+    "retries": 3
+  },
+  "sources": {
+    "skyscanner": {
+      "enabled": true,
+      "priority": 1
+    },
+    "momondo": {
+      "enabled": true,
+      "priority": 2
+    },
+    "googleFlights": {
+      "enabled": true,
+      "priority": 3
+    },
+    "airlines": {
+      "enabled": true,
+      "priority": 4
+    }
+  },
+  "search": {
+    "maxResults": 50,
+    "cacheExpiryMinutes": 30
+  }
+}
