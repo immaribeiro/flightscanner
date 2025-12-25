@@ -18,6 +18,8 @@
     "monitor:restart": "pm2 restart flight-monitor",
     "monitor:logs": "pm2 logs flight-monitor",
     "monitor:status": "pm2 status",
+    "view:flights": "node view-results.js",
+    "view:all": "node view-results.js --all",
     "examples": "node examples.js",
     "dev": "node --watch src/index.js",
     "test": "node --test tests/**/*.test.js"

@@ -54,6 +54,46 @@ export class FlightMonitor {
     }
   }
 
+  saveFlightResults(scanId, results) {
+    try {
+      const resultsFile = path.join(__dirname, `../data/flights-${scanId}.json`);
+      const summary = {
+        scanId,
+        timestamp: new Date().toISOString(),
+        route: this.config.route,
+        searchResults: results.searchResults,
+        priceAnalysis: results.priceAnalysis,
+        strategy: results.strategy,
+        finalRecommendation: results.finalRecommendation
+      };
+      fs.writeFileSync(resultsFile, JSON.stringify(summary, null, 2));
+      console.log(`💾 Full results saved: flights-${scanId}.json`);
+    } catch (error) {
+      console.error('Failed to save flight results:', error.message);
+    }
+  }
+
+  saveLatestResults(results) {
+    try {
+      const latestFile = path.join(__dirname, '../data/latest-flights.json');
+      const summary = {
+        lastUpdated: new Date().toISOString(),
+        route: this.config.route,
+        targetPrice: this.config.targetPrice,
+        bestPriceFound: this.priceHistory.bestPrice,
+        totalScans: this.priceHistory.scans.length,
+        searchResults: results.searchResults,
+        priceAnalysis: results.priceAnalysis,
+        strategy: results.strategy,
+        finalRecommendation: results.finalRecommendation
+      };
+      fs.writeFileSync(latestFile, JSON.stringify(summary, null, 2));
+      console.log(`💾 Latest results updated: latest-flights.json`);
+    } catch (error) {
+      console.error('Failed to save latest results:', error.message);
+    }
+  }
+
   async start() {
     this.isRunning = true;
     console.log('\n' + '═'.repeat(80));
@@ -102,6 +142,10 @@ export class FlightMonitor {
         console.log('⚠️  No flights found in this scan');
         return;
       }
+
+      // Save complete results for this scan
+      this.saveFlightResults(scanId, results);
+      this.saveLatestResults(results);
 
       // Find best price from this scan
       const flights = results.searchResults.flights;
