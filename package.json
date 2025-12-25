@@ -11,6 +11,12 @@
     "config": "node src/configure.js",
     "config:show": "node src/configure.js show",
     "search:tokyo": "node search-tokyo.js",
+    "monitor:tokyo": "node monitor-tokyo.js",
+    "monitor:start": "pm2 start monitor-tokyo.js --name flight-monitor",
+    "monitor:stop": "pm2 stop flight-monitor",
+    "monitor:restart": "pm2 restart flight-monitor",
+    "monitor:logs": "pm2 logs flight-monitor",
+    "monitor:status": "pm2 status",
     "examples": "node examples.js",
     "dev": "node --watch src/index.js",
     "test": "node --test tests/**/*.test.js"
@@ -31,8 +37,10 @@
     "cheerio": "^1.0.0-rc.12",
     "commander": "^11.1.0",
     "dotenv": "^16.3.1",
+    "node-telegram-bot-api": "^0.67.0",
     "openai": "^4.24.0",
     "ora": "^8.0.1",
-    "playwright": "^1.40.0"
+    "playwright": "^1.40.0",
+    "pm2": "^6.0.14"
   }
 }
