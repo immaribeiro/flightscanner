@@ -18,10 +18,10 @@
     }
   },
   "agentAssignments": {
-    "orchestrator": "copilot",
-    "search": "copilot",
-    "priceAnalyzer": "copilot",
-    "strategy": "copilot"
+    "orchestrator": "claude",
+    "search": "claude",
+    "priceAnalyzer": "claude",
+    "strategy": "claude"
   },
   "scraping": {
     "rateLimiting": {

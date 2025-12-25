@@ -10,6 +10,7 @@
     "cli": "node src/cli.js",
     "config": "node src/configure.js",
     "config:show": "node src/configure.js show",
+    "search:tokyo": "node search-tokyo.js",
     "examples": "node examples.js",
     "dev": "node --watch src/index.js",
     "test": "node --test tests/**/*.test.js"

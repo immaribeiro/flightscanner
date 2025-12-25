@@ -3,6 +3,7 @@ import { SearchAgent } from './agents/SearchAgent.js';
 import { PriceAnalyzerAgent } from './agents/PriceAnalyzerAgent.js';
 import { StrategyAgent } from './agents/StrategyAgent.js';
 import { showAgentConfiguration, validateAPIKeys } from './utils/agentConfig.js';
+import { displayFlightResults, displaySummary } from './utils/flightFormatter.js';
 
 export class FlightScanner {
   constructor() {
@@ -52,10 +53,9 @@ export class FlightScanner {
         strategy
       );
 
-      console.log('\n╔═══════════════════════════════════════════════════════╗');
-      console.log('║              Final Recommendations                    ║');
-      console.log('╚═══════════════════════════════════════════════════════╝\n');
-      console.log(finalRecommendation);
+      // Display formatted results
+      displayFlightResults(searchResults, priceAnalysis, strategy);
+      displaySummary(finalRecommendation);
 
       return {
         searchParams,
