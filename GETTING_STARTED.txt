@@ -1,123 +1,78 @@
-╔══════════════════════════════════════════════════════════════════╗
-║                                                                  ║
-║         🛫 FLIGHTSCANNER - MULTI-AGENT FLIGHT FINDER 🛫         ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
+═══════════════════════════════════════════════════════════════
+  🤖 AUTOMATED FLIGHT MONITORING - QUICK START
+═══════════════════════════════════════════════════════════════
 
-✅ PROJECT SUCCESSFULLY CREATED!
+Your FlightScanner now has AI agents that work 24/7 to find you
+the best flight deals and send Telegram alerts!
 
-📍 Location: /Users/imma/GitHub/flightscanner
+═══════════════════════════════════════════════════════════════
+  📱 STEP 1: SET UP TELEGRAM (2 minutes)
+═══════════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open Telegram → Search "@BotFather"
+2. Send: /newbot
+3. Name: "My Flight Monitor"
+4. Username: "yourname_flight_bot"
+5. COPY THE TOKEN (looks like: 123456:ABCdef...)
 
-📋 NEXT STEPS:
+6. Send "hello" to your bot
+7. Visit: https://api.telegram.org/botYOUR_TOKEN/getUpdates
+8. Find "id":123456789 → That's your CHAT ID
 
-1️⃣  GET API KEYS
-   • OpenAI: https://platform.openai.com/api-keys
-   • Anthropic: https://console.anthropic.com/
+═══════════════════════════════════════════════════════════════
+  ⚙️  STEP 2: ADD TO .ENV FILE
+═══════════════════════════════════════════════════════════════
 
-2️⃣  RUN SETUP
-   cd flightscanner
-   ./setup.sh
+Add these two lines to your .env file:
 
-3️⃣  CONFIGURE API KEYS
-   Edit .env file and add:
-   OPENAI_API_KEY=sk-your-key-here
-   ANTHROPIC_API_KEY=sk-ant-your-key-here
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_ID=your_chat_id_here
 
-4️⃣  TRY IT OUT
-   npm start                    # Demo mode
-   npm run examples             # See example searches
-   npm run cli -- search --help # See CLI options
+═══════════════════════════════════════════════════════════════
+  🚀 STEP 3: START MONITORING
+═══════════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+npm run monitor:start
 
-🎯 QUICK EXAMPLES:
+That's it! The monitor is now running 24/7 in the background.
 
-Basic Search:
-  npm run cli -- search \
-    --from "New York" \
-    --to "London" \
-    --depart "2024-03-15" \
-    --return "2024-03-22"
+═══════════════════════════════════════════════════════════════
+  📊 USEFUL COMMANDS
+═══════════════════════════════════════════════════════════════
 
-One-Way Flight:
-  npm run cli -- search \
-    --from "LAX" \
-    --to "JFK" \
-    --depart "2024-03-20"
+npm run monitor:status    # Check if running
+npm run monitor:logs      # View live logs
+npm run monitor:stop      # Stop monitor
+npm run monitor:restart   # Restart monitor
+npm run search:tokyo      # One-time search
 
-Interactive Mode:
-  node src/cli.js interactive
+═══════════════════════════════════════════════════════════════
+  🎯 WHAT YOU'LL GET
+═══════════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Telegram notifications when:
+  ✅ New lowest price found
+  ✅ Price below €1,000 target
+  ✅ Great deals discovered
 
-🤖 HOW IT WORKS:
+Every hour, your AI agents:
+  → Search Porto → Tokyo flights
+  → Compare prices across platforms
+  → Find flexible date alternatives
+  → Track price history
+  → Send you instant alerts
 
-The system uses 4 specialized AI agents:
+═══════════════════════════════════════════════════════════════
+  📖 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
 
-┌─────────────────────────────────────────────────────────────┐
-│ 1. ORCHESTRATOR (Claude) - Coordinates all agents          │
-│ 2. SEARCH AGENT (GPT-4) - Finds flights on multiple sites  │
-│ 3. PRICE ANALYZER (Claude) - Compares prices & finds deals │
-│ 4. STRATEGY AGENT (GPT-4) - Booking recommendations        │
-└─────────────────────────────────────────────────────────────┘
+MONITORING_SETUP.md    → Complete monitoring guide
+TOKYO_SEARCH_GUIDE.md  → Tokyo flight search details
+COMMANDS.md            → All available commands
+README.md              → Project overview
 
-All agents work in parallel to give you the best recommendations!
+═══════════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Need help? Check MONITORING_SETUP.md for detailed instructions.
 
-📚 DOCUMENTATION:
-
-README.md         - Project overview
-QUICKSTART.md     - Quick start guide
-ARCHITECTURE.md   - System architecture details
-API.md            - Complete API documentation
-PROJECT_SUMMARY.md - Full project summary
-GETTING_STARTED.txt - This file
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🔧 PROJECT STRUCTURE:
-
-flightscanner/
-├── src/
-│   ├── agents/          ← AI agent implementations
-│   ├── scrapers/        ← Website scrapers
-│   ├── utils/           ← Helper functions
-│   ├── index.js         ← Main FlightScanner class
-│   └── cli.js           ← Command-line interface
-├── tests/               ← Test files
-├── config/              ← Configuration
-└── examples.js          ← Usage examples
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-💡 TIPS:
-
-• Start with the demo: npm start
-• Check examples: npm run examples
-• Use interactive mode for easier input
-• Read ARCHITECTURE.md to understand the system
-• Modify agent prompts in src/agents/ to customize behavior
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🚀 FUTURE ENHANCEMENTS:
-
-This is a foundation! You can extend it with:
-✓ Real API integrations (Skyscanner, Amadeus)
-✓ Playwright for web scraping
-✓ Price tracking & alerts
-✓ Historical data analysis
-✓ Mobile app
-✓ Email notifications
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Happy flight hunting! ✈️
-
-Questions? Check the documentation or explore the code.
-The agents are ready to help you find the best flight deals!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Happy flight hunting! 🛫✨
