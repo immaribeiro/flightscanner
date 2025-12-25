@@ -12,6 +12,7 @@
     "config:show": "node src/configure.js show",
     "search:tokyo": "node search-tokyo.js",
     "monitor:tokyo": "node monitor-tokyo.js",
+    "monitor:test": "node test-monitor.js",
     "monitor:start": "pm2 start monitor-tokyo.js --name flight-monitor",
     "monitor:stop": "pm2 stop flight-monitor",
     "monitor:restart": "pm2 restart flight-monitor",

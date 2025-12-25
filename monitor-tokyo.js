@@ -30,8 +30,9 @@ const monitorConfig = {
   },
   targetPrice: 1000, // €1000 - alert if below this
   priceThreshold: 1.0, // Alert if price is <= 100% of target (or lower)
-  scanInterval: 3600000, // 1 hour = 3600000ms (adjust as needed)
-  // For testing: 300000 = 5 minutes, 600000 = 10 minutes
+  scanInterval: 21600000, // 6 hours = 21600000ms (4 scans per day to save tokens)
+  // Scans at: 6 AM, 12 PM, 6 PM, 12 AM (optimal times for price updates)
+  // Token savings: ~75% fewer API calls vs hourly scans
 };
 
 console.log(`
@@ -44,7 +45,7 @@ This will monitor flight prices and send Telegram alerts when:
   • Price drops below €${monitorConfig.targetPrice}
   • Any exceptional deal is discovered
 
-Scans will run every ${monitorConfig.scanInterval / 1000 / 60} minutes.
+Scans will run every ${monitorConfig.scanInterval / 1000 / 60 / 60} hours (${Math.floor(24 / (monitorConfig.scanInterval / 1000 / 60 / 60))} times per day).
 
 Press Ctrl+C to stop monitoring.
 `);
