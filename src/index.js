@@ -2,9 +2,18 @@ import { OrchestratorAgent } from './agents/OrchestratorAgent.js';
 import { SearchAgent } from './agents/SearchAgent.js';
 import { PriceAnalyzerAgent } from './agents/PriceAnalyzerAgent.js';
 import { StrategyAgent } from './agents/StrategyAgent.js';
+import { showAgentConfiguration, validateAPIKeys } from './utils/agentConfig.js';
 
 export class FlightScanner {
   constructor() {
+    // Show current configuration
+    showAgentConfiguration();
+    
+    // Validate API keys
+    if (!validateAPIKeys()) {
+      throw new Error('Missing required API keys. Please check your .env file.');
+    }
+    
     this.orchestrator = new OrchestratorAgent();
     this.searchAgent = new SearchAgent();
     this.priceAnalyzer = new PriceAnalyzerAgent();

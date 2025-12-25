@@ -1,6 +1,6 @@
-import { GPTAgent } from './BaseAgent.js';
+import { createAgent } from './BaseAgent.js';
 
-export class StrategyAgent extends GPTAgent {
+export class StrategyAgent {
   constructor() {
     const systemPrompt = `You are the Strategy Agent for a flight price comparison system.
 
@@ -28,7 +28,12 @@ Provide strategic advice in JSON:
   }
 }`;
 
-    super('StrategyAgent', systemPrompt);
+    this.agent = createAgent('strategy', 'StrategyAgent', systemPrompt);
+    this.name = this.agent.name;
+  }
+
+  async execute(prompt) {
+    return this.agent.execute(prompt);
   }
 
   async strategize(searchParams, priceAnalysis) {
@@ -42,19 +47,38 @@ ${JSON.stringify(searchParams, null, 2)}
 PRICE ANALYSIS:
 ${JSON.stringify(priceAnalysis, null, 2)}
 
-Provide:
-1. Should user book now or wait?
-2. Alternative dates that might be cheaper
-3. Best day of week to book/fly
-4. Seasonal pricing insights
-5. Risk assessment of waiting for lower prices`;
+Respond with ONLY valid JSON (no other text):
+{
+  "bookingRecommendation": "book_now",
+  "reasoning": "explanation text",
+  "alternativeDates": [
+    {
+      "departDate": "YYYY-MM-DD",
+      "returnDate": "YYYY-MM-DD",
+      "estimatedSavings": "$amount"
+    }
+  ],
+  "tips": ["tip 1", "tip 2"],
+  "priceAlerts": {
+    "setup": true,
+    "targetPrice": 350
+  }
+}`;
 
     const response = await this.execute(prompt);
     console.log(`✓ ${this.name}: Strategy developed`);
     
     try {
-      return JSON.parse(response.content);
+      let jsonStr = response.content.trim();
+      const jsonMatch = jsonStr.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (jsonMatch) jsonStr = jsonMatch[1];
+      if (!jsonStr.startsWith('{')) {
+        const objMatch = jsonStr.match(/(\{[\s\S]*\})/);
+        if (objMatch) jsonStr = objMatch[1];
+      }
+      return JSON.parse(jsonStr);
     } catch (error) {
+      console.error('Strategy agent JSON parse error:', error.message);
       return { strategy: response.content, structured: false };
     }
   }

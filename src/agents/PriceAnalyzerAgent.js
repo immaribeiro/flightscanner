@@ -1,6 +1,6 @@
-import { ClaudeAgent } from './BaseAgent.js';
+import { createAgent } from './BaseAgent.js';
 
-export class PriceAnalyzerAgent extends ClaudeAgent {
+export class PriceAnalyzerAgent {
   constructor() {
     const systemPrompt = `You are the Price Analyzer Agent for a flight price comparison system.
 
@@ -28,7 +28,12 @@ Provide analysis in JSON format:
   "warnings": ["potential issues"]
 }`;
 
-    super('PriceAnalyzer', systemPrompt);
+    this.agent = createAgent('priceAnalyzer', 'PriceAnalyzer', systemPrompt);
+    this.name = this.agent.name;
+  }
+
+  async execute(prompt) {
+    return this.agent.execute(prompt);
   }
 
   async analyze(flightData) {
@@ -37,19 +42,36 @@ Provide analysis in JSON format:
     const prompt = `Analyze these flight search results:
 ${JSON.stringify(flightData, null, 2)}
 
-Provide:
-1. Best value options (not just cheapest)
-2. Price comparison across sources
-3. Value analysis (price vs. convenience)
-4. Warnings about restrictions or hidden costs
-5. Price trends if detectable`;
+Respond with ONLY valid JSON (no other text):
+{
+  "bestPrice": {
+    "amount": number,
+    "source": "platform",
+    "flightId": "id"
+  },
+  "priceRange": {
+    "min": number,
+    "max": number,
+    "average": number
+  },
+  "recommendations": ["insight 1", "insight 2"],
+  "warnings": ["warning 1", "warning 2"]
+}`;
 
     const response = await this.execute(prompt);
     console.log(`✓ ${this.name}: Analysis completed`);
     
     try {
-      return JSON.parse(response.content);
+      let jsonStr = response.content.trim();
+      const jsonMatch = jsonStr.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (jsonMatch) jsonStr = jsonMatch[1];
+      if (!jsonStr.startsWith('{')) {
+        const objMatch = jsonStr.match(/(\{[\s\S]*\})/);
+        if (objMatch) jsonStr = objMatch[1];
+      }
+      return JSON.parse(jsonStr);
     } catch (error) {
+      console.error('Price analyzer JSON parse error:', error.message);
       return { analysis: response.content, structured: false };
     }
   }

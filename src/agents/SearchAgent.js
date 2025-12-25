@@ -1,6 +1,6 @@
-import { GPTAgent } from './BaseAgent.js';
+import { createAgent } from './BaseAgent.js';
 
-export class SearchAgent extends GPTAgent {
+export class SearchAgent {
   constructor() {
     const systemPrompt = `You are the Search Agent for a flight price comparison system.
 
@@ -26,7 +26,12 @@ Output structured flight data in JSON format:
   }]
 }`;
 
-    super('SearchAgent', systemPrompt);
+    this.agent = createAgent('search', 'SearchAgent', systemPrompt);
+    this.name = this.agent.name;
+  }
+
+  async execute(prompt) {
+    return this.agent.execute(prompt);
   }
 
   async search(searchParams) {
@@ -39,14 +44,37 @@ Simulate searching across Skyscanner, Momondo, and Google Flights.
 Generate realistic flight options with varying prices, times, and airlines.
 Include direct flights and options with layovers.
 
-Return structured JSON data with at least 5-10 flight options from each source.`;
+Respond with ONLY valid JSON in this format (no other text):
+{
+  "source": "platform name",
+  "flights": [
+    {
+      "airline": "airline name",
+      "price": number,
+      "currency": "USD",
+      "departure": "ISO datetime",
+      "arrival": "ISO datetime",
+      "duration": minutes,
+      "stops": number,
+      "link": "booking URL"
+    }
+  ]
+}`;
 
     const response = await this.execute(prompt);
     console.log(`✓ ${this.name}: Search completed`);
     
     try {
-      return JSON.parse(response.content);
+      let jsonStr = response.content.trim();
+      const jsonMatch = jsonStr.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (jsonMatch) jsonStr = jsonMatch[1];
+      if (!jsonStr.startsWith('{')) {
+        const objMatch = jsonStr.match(/(\{[\s\S]*\})/);
+        if (objMatch) jsonStr = objMatch[1];
+      }
+      return JSON.parse(jsonStr);
     } catch (error) {
+      console.error('Search agent JSON parse error:', error.message);
       return { source: 'multiple', flights: [], raw: response.content };
     }
   }

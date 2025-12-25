@@ -1,6 +1,6 @@
-import { ClaudeAgent } from './BaseAgent.js';
+import { createAgent } from './BaseAgent.js';
 
-export class OrchestratorAgent extends ClaudeAgent {
+export class OrchestratorAgent {
   constructor() {
     const systemPrompt = `You are the Orchestrator Agent for a flight price comparison system.
 
@@ -25,7 +25,12 @@ Output format should be JSON with:
   "priority": "price|time|convenience"
 }`;
 
-    super('Orchestrator', systemPrompt);
+    this.agent = createAgent('orchestrator', 'Orchestrator', systemPrompt);
+    this.name = this.agent.name;
+  }
+
+  async execute(prompt) {
+    return this.agent.execute(prompt);
   }
 
   async orchestrate(userRequest) {
@@ -35,16 +40,46 @@ Output format should be JSON with:
 
 "${userRequest}"
 
-Provide search parameters and determine which agents should be activated.`;
+You must respond with ONLY a valid JSON object, no other text. Use this exact format:
+{
+  "searchParams": {
+    "origin": "airport code",
+    "destination": "airport code",
+    "departDate": "YYYY-MM-DD",
+    "returnDate": "YYYY-MM-DD",
+    "passengers": 1,
+    "class": "economy"
+  },
+  "taskAssignments": ["search", "analyze", "strategy"],
+  "priority": "price"
+}`;
 
     const response = await this.execute(prompt);
     
     try {
-      const structured = JSON.parse(response.content);
+      // Try to extract JSON from response
+      let jsonStr = response.content.trim();
+      
+      // If response contains markdown code blocks, extract the JSON
+      const jsonMatch = jsonStr.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (jsonMatch) {
+        jsonStr = jsonMatch[1];
+      }
+      
+      // If response has other text, try to find JSON object
+      if (!jsonStr.startsWith('{')) {
+        const objMatch = jsonStr.match(/(\{[\s\S]*\})/);
+        if (objMatch) {
+          jsonStr = objMatch[1];
+        }
+      }
+      
+      const structured = JSON.parse(jsonStr);
       console.log(`✓ ${this.name}: Request structured successfully`);
       return structured;
     } catch (error) {
       console.error(`✗ ${this.name}: Failed to parse response`);
+      console.error('Response was:', response.content.substring(0, 200));
       return { error: 'Failed to structure request', raw: response.content };
     }
   }

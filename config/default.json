@@ -1,15 +1,27 @@
 {
   "aiProviders": {
     "openai": {
-      "model": "gpt-4-turbo-preview",
+      "model": "gpt-4o",
       "maxTokens": 4096,
       "temperature": 0.7
     },
     "anthropic": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-20250514",
       "maxTokens": 4096,
       "temperature": 0.7
+    },
+    "copilot": {
+      "model": "gpt-4o",
+      "maxTokens": 4096,
+      "temperature": 0.7,
+      "apiUrl": "https://api.githubcopilot.com/chat/completions"
     }
+  },
+  "agentAssignments": {
+    "orchestrator": "copilot",
+    "search": "copilot",
+    "priceAnalyzer": "copilot",
+    "strategy": "copilot"
   },
   "scraping": {
     "rateLimiting": {

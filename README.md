@@ -58,13 +58,36 @@ cp .env.example .env
 
 ## Configuration
 
-Create a `.env` file with:
+Create a `.env` file with your API keys:
 
 ```env
 OPENAI_API_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
-GITHUB_TOKEN=your_github_token (optional)
+GITHUB_TOKEN=your_github_token (for Copilot)
 ```
+
+### Choose Your AI Agents
+
+**NEW!** You can now select which AI provider (Claude, OpenAI, or GitHub Copilot) to use for each agent role!
+
+```bash
+# Quick setup - configure all agents
+npm run config setup
+
+# View current configuration
+npm run config:show
+
+# Set individual agents
+npm run config set orchestrator claude
+npm run config set search openai
+npm run config set priceAnalyzer claude
+npm run config set strategy copilot
+
+# Or set all agents at once
+npm run config set-all claude
+```
+
+See [AGENT_CONFIG.md](AGENT_CONFIG.md) for detailed configuration options.
 
 ## Usage
 
